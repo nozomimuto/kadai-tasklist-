@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
   before_action :require_user_logged_in
-  before_action :correct_user, only: [:destroy]
+  before_action :correct_user, only: [:destroy, :show, :edit, :update]
   
   
   def create
@@ -14,7 +14,26 @@ class TasksController < ApplicationController
       render 'toppages/index'
     end
   end
+  
+  def show
+    
+  end
+  
+  def edit
+    @task = current_user.tasks.find_by(id: params[:id])
+  end
+  
+  def update
 
+    if @task.update(task_params)
+      flash[:success] = 'Task は正常に更新されました'
+      redirect_to root_url
+    else
+      flash.now[:danger] = 'Task は更新されませんでした'
+      render :edit
+    end
+  end
+  
   def destroy
     @task.destroy
     flash[:success] = 'メッセージを削除しました。'
